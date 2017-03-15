@@ -1,21 +1,26 @@
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const { chain, split, isEmpty } = require('lodash');
 
 const queryformat = "$title;$artist;$album;$albumartist;$genre;$year;$bpm;$initial_key;$length;$path";
 
 function list(query) {
     return new Promise((resolve, reject) => {
-        exec(`beet list -f ${queryformat} ${query || ''}`, (err, stdout) => {
-            if (err) {
-                console.error(err);
-                return reject(err);
+        let beet = spawn('beet', ['list', '-f', queryformat, query || '']);
+        let results;
+        let buffer = '';
+        beet.stdout.on('data', data => {
+            buffer += data;
+        });
+        beet.on('close', code => {
+            if (code === 0) {
+                results = chain(buffer)
+                    .split(process.platform === 'win32' ? '\r\n' : '\n')
+                    .reject(isEmpty)
+                    .map(parseRow)
+                    .value();
+                return resolve(results);
             }
-            let results = chain(stdout)
-                .split(process.platform === 'win32' ? '\r\n' : '\n')
-                .reject(isEmpty)
-                .map(parseRow)
-                .value();
-            return resolve(results);
+            return reject(code);
         });
     });
 }
