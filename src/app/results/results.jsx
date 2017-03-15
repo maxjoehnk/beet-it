@@ -16,6 +16,12 @@ export class Results extends React.Component {
         };
     }
 
+    handleDragStart = result => {
+        if (this.props.onDragStart) {
+            this.props.onDragStart(result);
+        }
+    };
+
     render() {
         return (
             <Table selectable={false}>
@@ -29,7 +35,7 @@ export class Results extends React.Component {
                 <TableBody showRowHover>
                     {this.props.results.map(result => {
                         let { columns } = this.state;
-                        return <Result result={result} columns={columns}/>;
+                        return <Result result={result} columns={columns} onDragStart={() => this.handleDragStart(result)}/>;
                     })}
                 </TableBody>
             </Table>

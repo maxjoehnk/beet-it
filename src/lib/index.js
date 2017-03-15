@@ -23,13 +23,6 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.on('drag', (event, result) => {
-    window.webContents.startDrag({
-        file: result.file,
-        icon: null
-    });
-});
-
 ipcMain.on('query', (event, query) => {
     list(query)
         .then(result => event.sender.send('results', result))

@@ -1,12 +1,12 @@
 import React from 'react';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
-import { ipcRenderer } from 'electron';
 
 export class Result extends React.Component {
-
     handleDrag = event => {
         event.preventDefault();
-        ipcRenderer.send("drag", this.props.result);
+        if (this.props.onDragStart) {
+            this.props.onDragStart();
+        }
     };
 
     render() {

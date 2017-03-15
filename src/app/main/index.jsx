@@ -1,7 +1,7 @@
 import React from 'react';
 import { Results } from '../results';
-import { ipcRenderer } from 'electron';
-import TextField from 'material-ui/TextField';
+import { Query } from './query';
+import { ipcRenderer, remote } from 'electron';
 
 export class Main extends React.Component {
     constructor(props) {
@@ -12,6 +12,7 @@ export class Main extends React.Component {
         ipcRenderer.on('results', (event, results) => {
             this.setState({ results });
         });
+        this.webContents = remote.getCurrentWebContents();
     }
 
     componentDidMount() {
@@ -22,21 +23,19 @@ export class Main extends React.Component {
         ipcRenderer.send('query', query);
     }
 
-    handleUpdateQuery = event => {
-        this.query(event.target.value);
-        this.setState({
-            query: event.target.value
+    handleDragStart = result => {
+        this.webContents.startDrag({
+            file: result.file,
+            icon: null
         });
     };
 
     render() {
         return (
             <div>
-                <TextField fullWidth
-                           floatingLabelText="Query"
-                           value={this.state.query}
-                           onChange={this.handleUpdateQuery}/>
-                <Results results={this.state.results}/>
+                <Query onChange={this.query}/>
+                <Results results={this.state.results}
+                         onDragStart={this.handleDragStart}/>
             </div>
         );
     }
