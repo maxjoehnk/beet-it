@@ -1,11 +1,11 @@
 const { exec } = require('child_process');
 const { chain, split, isEmpty } = require('lodash');
 
-const queryformat = "$title;$artist;$album;$albumartist;$genre;$year;$bpm;$length;$path";
+const queryformat = "$title;$artist;$album;$albumartist;$genre;$year;$bpm;$initial_key;$length;$path";
 
 function list(query) {
     return new Promise((resolve, reject) => {
-        let beet = exec(`beet list -f ${queryformat} ${query || ''}`, (err, stdout) => {
+        exec(`beet list -f ${queryformat} ${query || ''}`, (err, stdout) => {
             if (err) {
                 console.error(err);
                 return reject(err);
@@ -22,6 +22,7 @@ function list(query) {
 
 function parseRow(row) {
     let fields = split(row, ';');
+
     return {
         data: {
             title:       fields[0],
@@ -31,9 +32,10 @@ function parseRow(row) {
             genre:       fields[4],
             year:        fields[5],
             bpm:         fields[6],
-            length:      fields[7]
+            key:         fields[7],
+            length:      fields[8]
         },
-        file: fields[8]
+        file: fields[9]
     };
 }
 
