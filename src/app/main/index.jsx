@@ -2,6 +2,7 @@ import React from 'react';
 import { Results } from '../results';
 import { Query } from './query';
 import { ipcRenderer, remote } from 'electron';
+import Paper from 'material-ui/Paper';
 
 export class Main extends React.Component {
     constructor(props) {
@@ -32,11 +33,11 @@ export class Main extends React.Component {
 
     render() {
         return (
-            <div>
+            <Paper style={{height: '100vh'}}>
                 <Query onChange={this.query}/>
                 <Results results={this.state.results}
                          onDragStart={this.handleDragStart}/>
-            </div>
+            </Paper>
         );
     }
 }

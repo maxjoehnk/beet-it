@@ -27,7 +27,8 @@ export class Query extends React.Component {
         return (
             <TextField fullWidth
                        floatingLabelText="Query"
-                       onChange={this.handleChange}/>
+                       onChange={this.handleChange}
+                       style={{margin: 8}}/>
         );
     }
 }
