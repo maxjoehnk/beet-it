@@ -11,7 +11,7 @@ export class Query extends React.Component {
 
     componentDidMount() {
         this.observable
-            .debounceTime(200)
+            .debounceTime(500)
             .subscribe(value => {
                 if (this.props.onChange) {
                     this.props.onChange(value);
