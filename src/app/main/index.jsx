@@ -2,6 +2,7 @@ import React from 'react';
 import { Results } from '../results';
 import { Query } from './query';
 import { ipcRenderer } from 'electron';
+import LinearProgress from 'material-ui/LinearProgress';
 import Paper from 'material-ui/Paper';
 
 export class Main extends React.Component {
@@ -11,7 +12,7 @@ export class Main extends React.Component {
             results: []
         };
         ipcRenderer.on('results', (event, results) => {
-            this.setState({ results });
+            this.setState({ results, pending: false });
         });
     }
 
@@ -19,9 +20,10 @@ export class Main extends React.Component {
         this.query();
     }
 
-    query(query) {
+    query = query => {
+        this.setState({ pending: true });
         ipcRenderer.send('query', query);
-    }
+    };
 
     handleDragStart = result => {
         ipcRenderer.send('startDrag', result);
@@ -30,6 +32,7 @@ export class Main extends React.Component {
     render() {
         return (
             <Paper style={{height: '100vh'}}>
+                {this.state.pending && <LinearProgress mode='indeterminate'/>}
                 <Query onChange={this.query}/>
                 <Results results={this.state.results}
                          onDragStart={this.handleDragStart}/>
