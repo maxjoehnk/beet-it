@@ -1,7 +1,7 @@
 import React from 'react';
 import { Results } from '../results';
 import { Query } from './query';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import Paper from 'material-ui/Paper';
 
 export class Main extends React.Component {
@@ -13,7 +13,6 @@ export class Main extends React.Component {
         ipcRenderer.on('results', (event, results) => {
             this.setState({ results });
         });
-        this.webContents = remote.getCurrentWebContents();
     }
 
     componentDidMount() {
@@ -25,10 +24,7 @@ export class Main extends React.Component {
     }
 
     handleDragStart = result => {
-        this.webContents.startDrag({
-            file: result.file,
-            icon: null
-        });
+        ipcRenderer.send('startDrag', result);
     };
 
     render() {

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeImage } = require('electron');
 const { join } = require('path');
 const { format } = require('url');
 const { list } = require('./beets');
@@ -22,6 +22,13 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+ipcMain.on('startDrag', (event, result) => {
+    window.webContents.startDrag({
+        file: result.file,
+        icon: nativeImage.createFromPath(join(__dirname, '..', '..', 'music-circle.png'))
+    });
+})
 
 ipcMain.on('query', (event, query) => {
     list(query)
