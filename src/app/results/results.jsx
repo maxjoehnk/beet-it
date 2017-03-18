@@ -24,9 +24,10 @@ export class Results extends React.Component {
 
     render() {
         return (
-            <Table selectable={false}>
+            <Table selectable={false} fixedHeader={true} height={`calc(100vh - ${this.props.playerOpen ? 203 : 147}px)`}>
                 <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                     <TableRow>
+                        <TableHeaderColumn/>
                         {this.state.columns.map(column => {
                             return <TableHeaderColumn key={column}>{capitalize(column)}</TableHeaderColumn>;
                         })}
@@ -35,7 +36,12 @@ export class Results extends React.Component {
                 <TableBody showRowHover>
                     {this.props.results.map(result => {
                         let { columns } = this.state;
-                        return <Result result={result} columns={columns} onDragStart={() => this.handleDragStart(result)}/>;
+                        return <Result
+                            key={result.file}
+                            result={result}
+                            columns={columns}
+                            onDragStart={() => this.handleDragStart(result)}
+                            onPlayTrack={this.props.onPlayTrack}/>;
                     })}
                 </TableBody>
             </Table>
