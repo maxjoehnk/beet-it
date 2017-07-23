@@ -11,7 +11,8 @@ export class Results extends React.Component {
             columns: [
                 'title',
                 'artist',
-                'album'
+                'album',
+                'bpm'
             ]
         };
     }
